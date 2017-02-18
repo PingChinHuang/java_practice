@@ -101,16 +101,6 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 		if (root == null) return;
 
 		ArrayDeque<Node<E>> explored = new ArrayDeque<Node<E>>();
-		//System.out.print(root.mData + " ");
-
-/*		if (root.mLeft != null) {
-			explored.add(root.mLeft);
-			System.out.print(root.mLeft.mData + " ");
-		}
-		if (root.mRight != null) {
-			explored.add(root.mRight);
-			System.out.print(root.mRight.mData + " ");
-		}*/
 		explored.add(root);
 
 		while(!explored.isEmpty()) {
@@ -119,11 +109,9 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 
 			if (n.mLeft != null) {
 				explored.add(n.mLeft);
-				System.out.println(n.mLeft.mData + " push ");
 			}
 			if (n.mRight != null) {
 				explored.add(n.mRight);
-				System.out.println(n.mRight.mData + " push");
 			}
 		}
 	}
