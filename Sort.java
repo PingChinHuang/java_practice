@@ -9,6 +9,7 @@ class SortAlgorithm {
 	public static final int mSORT_TYPE_MERGESORT = 1;
 	public static final int mSORT_TYPE_BUBBLESORT = 2;
 	public static final int mSORT_TYPE_SELECTIONSORT = 3;
+	public static final int mSORT_TYPE_INSERTIONSORT = 4;
 
 	private SortAlgorithm(int type) {
 		mSortType = type;
@@ -46,8 +47,8 @@ class SortAlgorithm {
 		int pivot = mSeries[pivotIdx];
 		int i = left, j = right;
 		while (i <= j) {
-			while (mSeries[i] < pivot) i++;
-			while (mSeries[j] > pivot) j--;
+			while (mSeries[i] < pivot && i <= right) i++;
+			while (mSeries[j] > pivot && j > pivotIdx) j--;
 			if (i <= j) {
 				Swap(i, j);
 				i++;
@@ -135,6 +136,17 @@ class SortAlgorithm {
 		mbIsSorted = true;
 	}
 
+	private void InsertionSort() {
+		for (int i = 1; i < mSeries.length; i++) {
+			int tmp = mSeries[i];
+			int j = i - 1;
+			for (; j >= 0 && tmp < mSeries[j]; j--) {
+				mSeries[j + 1] = mSeries[j];
+			}
+			mSeries[j + 1] = tmp;
+		}
+	}
+
 	public boolean IsSorted() {
 		return mbIsSorted;
 	}
@@ -168,6 +180,9 @@ class SortAlgorithm {
 			break;
 		case mSORT_TYPE_MERGESORT:
 			MergeSort();
+			break;
+		case mSORT_TYPE_INSERTIONSORT:
+			InsertionSort();
 			break;
 		default:
 			break;
@@ -211,7 +226,7 @@ public class Sort {
 		}
 		System.out.println("");
 
-		SortAlgorithm sortAlgo = SortAlgorithm.CreateInstance(SortAlgorithm.mSORT_TYPE_MERGESORT); 
+		SortAlgorithm sortAlgo = SortAlgorithm.CreateInstance(SortAlgorithm.mSORT_TYPE_QUICKSORT); 
 		int[] sortedSeries = sortAlgo.Sort(unsortedSeries);
 		System.out.println("Sorted: ");
 		for (int i = 0; i < sortedSeries.length; i++) {
