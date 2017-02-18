@@ -120,6 +120,53 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 		LevelorderTraverse(mRoot);
 		System.out.println(" ");
 	}
+
+	private E GetLeftMost(Node<E> root) {
+		if (root.mLeft == null) return root.mData;
+		return GetLeftMost(root.mLeft);
+	}
+
+	public E GetLeftMost() {
+		return GetLeftMost(mRoot);
+	}
+
+	private E GetRightMost(Node<E> root) {
+		if (root.mRight == null) return root.mData;
+		return GetRightMost(root.mRight);
+	}
+
+	public E GetRightMost() {
+		return GetRightMost(mRoot);
+	}
+
+	private Node<E> Search(Node<E> root, E data) {
+		if (root == null) return null;
+		if (root.mData.compareTo(data) == 0) return root;
+
+		Node<E> n;
+		if (root.mData.compareTo(data) > 0) {
+			n = Search(root.mLeft, data);
+		} else {
+			n = Search(root.mRight, data);
+		}
+
+		return n;
+	}
+
+	public boolean Search(E data) {
+		if (mRoot == null) return false;
+
+		Node<E> n = Search(mRoot, data);
+		if (n == null) return false;
+		else return true;	
+	}
+
+	/*public E GetSuccessor(E data) {
+		
+	}*/
+
+	/*public E GetPredecessor(E data) {
+	}*/
 }
 
 public class BinaryTree {
@@ -138,6 +185,16 @@ public class BinaryTree {
 		BTAlgo.PreorderTraverse();
 		BTAlgo.PostorderTraverse();
 		BTAlgo.LevelorderTraverse();
+
+		System.out.println(BTAlgo.GetLeftMost());
+		System.out.println(BTAlgo.GetRightMost());
+		System.out.println(BTAlgo.Search(22));
+		System.out.println(BTAlgo.Search(23));
+		System.out.println(BTAlgo.Search(0));
+		System.out.println(BTAlgo.Search(9));
+		System.out.println(BTAlgo.Search(1));
+		System.out.println(BTAlgo.Search(44));
+		System.out.println(BTAlgo.Search(49));
 	}
 }
 
