@@ -56,6 +56,54 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 	}
 
 	public void RemoveNode(E data) {
+		Node<E> n = Search(mRoot, data);
+		if (n == null) return;
+
+		if (n.mLeft != null && n.mRight != null) {
+			Node<E> successor = GetSuccessor(mRoot, data);
+			n.mData = successor.mData; // Use successor's data to replace the deletion node's data.
+			if (successor.mRight != null) {
+				if (successor.mParent.mData.compareTo(successor.mData) > 0) successor.mParent.mLeft = successor.mRight;
+				else successor.mParent.mRight = successor.mRight;
+			} else if (successor.mLeft != null) {
+				if (successor.mParent.mData.compareTo(successor.mData) > 0) successor.mParent.mLeft = successor.mLeft;
+				else successor.mParent.mRight = successor.mLeft;
+			} else { /* only can be successor.mRight != null && successor.mLeft != null*/
+				if (successor.mParent.mData.compareTo(successor.mData) > 0) {
+					successor.mParent.mLeft = null;
+				}
+				else {
+					successor.mParent.mRight = null;
+				}
+			}
+		} else if (n.mLeft != null) {
+			if (n == mRoot) {
+				mRoot = n.mLeft;
+				n.mLeft.mParent = null;
+			} else {
+				if (n.mData.compareTo(n.mParent.mData) <= 0) n.mParent.mLeft = n.mLeft;
+				else n.mParent.mRight = n.mLeft;
+				n.mLeft.mParent = n.mParent;
+			}
+		} else if (n.mRight != null) {
+			if (n == mRoot) {
+				mRoot = n.mRight;
+				n.mRight.mParent = null;
+			} else {
+				if (n.mData.compareTo(n.mParent.mData) <= 0) n.mParent.mLeft = n.mRight;
+				else n.mParent.mRight = n.mRight;
+				n.mRight.mParent = n.mParent;
+			}
+		} else {
+			if (n == mRoot) {
+				mRoot = null;
+			} else {
+				if (n.mData.compareTo(n.mParent.mData) <= 0) {
+					n.mParent.mLeft = null;
+				}
+				else n.mParent.mRight = null;
+			}
+		}
 	}
 
 	private void InorderTraverse(Node<E> root){
@@ -121,22 +169,22 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 		System.out.println(" ");
 	}
 
-	private E GetLeftMost(Node<E> root) {
-		if (root.mLeft == null) return root.mData;
+	private Node<E> GetLeftMost(Node<E> root) {
+		if (root.mLeft == null) return root;
 		return GetLeftMost(root.mLeft);
 	}
 
 	public E GetLeftMost() {
-		return GetLeftMost(mRoot);
+		return GetLeftMost(mRoot).mData;
 	}
 
-	private E GetRightMost(Node<E> root) {
-		if (root.mRight == null) return root.mData;
+	private Node<E> GetRightMost(Node<E> root) {
+		if (root.mRight == null) return root;
 		return GetRightMost(root.mRight);
 	}
 
 	public E GetRightMost() {
-		return GetRightMost(mRoot);
+		return GetRightMost(mRoot).mData;
 	}
 
 	private Node<E> Search(Node<E> root, E data) {
@@ -161,10 +209,10 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 		else return true;	
 	}
 
-	public E GetSuccessor(E data) {
-		if (mRoot == null) return null;
+	private Node<E> GetSuccessor(Node<E> root, E data) {
+		if (root == null) return null;
 		
-		Node<E> current = Search(mRoot, data);
+		Node<E> current = Search(root, data);
 		if (current == null) return null;
 
 		if (current.mRight != null)
@@ -176,16 +224,19 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 			successor = successor.mParent;
 		}
 
-		if (successor == null)
-			return null;
-		else
-			return successor.mData;
+		return successor;
 	} 
 
-	public E GetPredecessor(E data) {
-		if (mRoot == null) return null;
+	public E GetSuccessor(E data) {
+		Node<E> n = GetSuccessor(mRoot, data);
+		if (n == null) return null;
+		else return n.mData;
+	} 
+
+	private Node<E> GetPredecessor(Node<E> root, E data) {
+		if (root == null) return null;
 		
-		Node<E> current = Search(mRoot, data);
+		Node<E> current = Search(root, data);
 		if (current == null) return null;
 
 		if (current.mLeft != null)
@@ -197,10 +248,13 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 			predecessor = predecessor.mParent;
 		}
 
-		if (predecessor == null)
-			return null;
-		else
-			return predecessor.mData;
+		return predecessor;
+	}
+
+	public E GetPredecessor(E data) {
+		Node<E> n = GetPredecessor(mRoot, data);
+		if (n == null) return null;
+		else return n.mData;
 	}
 }
 
@@ -237,6 +291,25 @@ public class BinaryTree {
 		System.out.println(BTAlgo.GetSuccessor(16));
 		System.out.println(BTAlgo.GetPredecessor(76));
 		System.out.println(BTAlgo.GetSuccessor(76));
+
+		BTAlgo.RemoveNode(9);
+		BTAlgo.InorderTraverse();
+		BTAlgo.PreorderTraverse();
+		BTAlgo.RemoveNode(22);
+		BTAlgo.InorderTraverse();
+		BTAlgo.PreorderTraverse();
+		BTAlgo.RemoveNode(16);
+		BTAlgo.InorderTraverse();
+		BTAlgo.PreorderTraverse();
+		BTAlgo.RemoveNode(5);
+		BTAlgo.InorderTraverse();
+		BTAlgo.PreorderTraverse();
+		BTAlgo.RemoveNode(1);
+		BTAlgo.InorderTraverse();
+		BTAlgo.PreorderTraverse();
+		BTAlgo.RemoveNode(27);
+		BTAlgo.InorderTraverse();
+		BTAlgo.PreorderTraverse();
 	}
 }
 
