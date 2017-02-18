@@ -161,12 +161,41 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 		else return true;	
 	}
 
-	/*public E GetSuccessor(E data) {
+	public E GetSuccessor(E data) {
+		if (mRoot == null) return null;
 		
-	}*/
+		Node<E> current = Search(mRoot, data);
+		if (current == null) return null;
 
-	/*public E GetPredecessor(E data) {
-	}*/
+		if (current.mRight != null)
+			return GetLeftMost(current.mRight);
+
+		Node<E> successor = current.mParent;
+		while(successor != null && successor.mRight == current) {
+			current = successor;
+			successor = successor.mParent;
+		}
+
+		return successor.mData;
+	} 
+
+	public E GetPredecessor(E data) {
+		if (mRoot == null) return null;
+		
+		Node<E> current = Search(mRoot, data);
+		if (current == null) return null;
+
+		if (current.mLeft != null)
+			return GetRightMost(current.mLeft);
+
+		Node<E> predecessor = current.mParent;
+		while(predecessor != null && predecessor.mLeft == current) {
+			current = predecessor;
+			predecessor = predecessor.mParent;
+		}
+
+		return predecessor.mData;
+	}
 }
 
 public class BinaryTree {
@@ -195,6 +224,13 @@ public class BinaryTree {
 		System.out.println(BTAlgo.Search(1));
 		System.out.println(BTAlgo.Search(44));
 		System.out.println(BTAlgo.Search(49));
+
+		System.out.println(BTAlgo.GetPredecessor(5));
+		System.out.println(BTAlgo.GetSuccessor(5));
+		System.out.println(BTAlgo.GetPredecessor(16));
+		System.out.println(BTAlgo.GetSuccessor(16));
+		System.out.println(BTAlgo.GetPredecessor(76));
+		System.out.println(BTAlgo.GetSuccessor(76));
 	}
 }
 
