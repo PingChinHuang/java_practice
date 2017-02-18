@@ -176,7 +176,10 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 			successor = successor.mParent;
 		}
 
-		return successor.mData;
+		if (successor == null)
+			return null;
+		else
+			return successor.mData;
 	} 
 
 	public E GetPredecessor(E data) {
@@ -194,7 +197,10 @@ class BinaryTAlgorithm<E extends Comparable<? super E>> {
 			predecessor = predecessor.mParent;
 		}
 
-		return predecessor.mData;
+		if (predecessor == null)
+			return null;
+		else
+			return predecessor.mData;
 	}
 }
 
