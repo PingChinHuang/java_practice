@@ -103,7 +103,7 @@ class GraphAlgorithm {
 			if (a == -1) break;
 			visited[a] = true;
 
-			// Calculate the minimal distance from a to all nodes.
+			// Calculate the minimal distance from root(distance[a] is the distance from starting point to a) to all nodes.
 			for (int j = 0; j < mVertexNum; j++) {
 				if (!visited[j] && distance[a] + mAdjacencyMatrix[a][j] < distance[j]) {
 					distance[j] = distance[a] + mAdjacencyMatrix[a][j];
@@ -137,7 +137,55 @@ class GraphAlgorithm {
 		System.out.println(" ");*/
 	}
 
-	public void MinSPT() {
+	private int[] PrimMinimumSPT(int s) {
+		boolean visited[] = new boolean[mVertexNum];
+		int distance[] = new int[mVertexNum];
+		int parent[] = new int[mVertexNum];
+
+		for (int i = 0; i < mVertexNum; i ++) {
+			visited[i] = false;
+			distance[i] = Integer.MAX_VALUE / 2;
+			parent[i] = mVertexNum + 1; // Use mVertexNum as the invalid vertex number for checking purpose.
+		}
+
+		distance[s] = 0;
+		parent[s] = s;
+
+		for (int i = 0; i < mVertexNum; i++) {
+			// To prevent from overflow..... inital value set to Integer.MAX_VALUE/2
+			// The edge weight no more than it.
+			int a = -1, min = Integer.MAX_VALUE / 2;
+
+			// Find a vertex a with minimal distance to check its edges to next vertex.
+			for (int j = 0; j < mVertexNum; j++) {
+				if (!visited[j] && distance[j] < min) {
+					min = distance[j];
+					a = j;
+				}
+			}
+
+			if (a == -1) break;
+			visited[a] = true;
+
+			// Only care about the distance from a to its neighbor.
+			// Get the minimal distance from a to all nodes.
+			for (int j = 0; j < mVertexNum; j++) {
+				if (!visited[j] && mAdjacencyMatrix[a][j] < distance[j]) {
+					distance[j] = mAdjacencyMatrix[a][j];
+					parent[j] = a;
+				}
+			}
+		}
+
+		return parent;
+	}
+
+	public void FindMSPT(int s) {
+		int parent[] = PrimMinimumSPT(s);
+		for (int i = 0; i < parent.length; i++) {
+			if (parent[i] <= mVertexNum && parent[i] != i)
+				System.out.println(parent[i] + "->" + i);
+		}
 	}
 
 	private boolean HasLoop(int s, boolean visited[], boolean recStack[]) {
@@ -205,9 +253,11 @@ public class Graph {
 		
 		ga.addEdge(0, 1, 2);
 		ga.addEdge(0, 3, 1);
+		ga.addEdge(0, 4, 1);
 		ga.addEdge(1, 4, 1);
 		ga.addEdge(3, 4 ,3);
-		ga.FindShortestPath(0, 4);	
+		//ga.FindShortestPath(0, 4);	
+		ga.FindMSPT(0);
 
 	}
 }
